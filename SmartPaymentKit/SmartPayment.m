@@ -186,6 +186,8 @@
 		} else {
 			return SmartPaymentTypeSinglePayment;
 		}
+	} else if ([_header isEqualToString:kSmartInvoice_Header]) {
+		return SmartPaymentTypeInvoice;
 	} else {
 		return SmartPaymentTypeDirectDebit;
 	}

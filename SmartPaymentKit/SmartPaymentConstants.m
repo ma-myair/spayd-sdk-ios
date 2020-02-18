@@ -23,14 +23,15 @@
 // Header & Version
 
 NSString * const kSmartPayment_Header	= @"SPD";
-NSString * const kSmartDebit_Header		= @"SCD";
+NSString * const kSmartDebit_Header     = @"SCD";
+NSString * const kSmartInvoice_Header   = @"SID";
 NSString * const kSmartPayment_Version	= @"1.0";
 
 // Keys
 
 NSString * const kSmartPaymentKey_Header = @"HEADER";
 
-// TAGS
+// Payment tags
 
 NSString * const kSmartPaymentTag_Account				= @"ACC";
 NSString * const kSmartPaymentTag_AlternateAccounts		= @"ALT-ACC";
@@ -47,6 +48,15 @@ NSString * const kSmartPaymentTag_CRC32					= @"CRC32";
 NSString * const kSmartPaymentTag_LastDate				= @"DL";
 NSString * const kSmartPaymentTag_Frequency				= @"FRQ";
 NSString * const kSmartPaymentTag_DeathHandling			= @"DH";
+
+// Invoice tags
+
+NSString * const kSmartInvoiceTag_Account               = @"ACC";
+NSString * const kSmartInvoiceTag_Amount                = @"AM";
+NSString * const kSmartInvoiceTag_CurrencyCode          = @"CC";
+NSString * const kSmartInvoiceTag_DueDate               = @"DT";
+NSString * const kSmartInvoiceTag_MessageForReceiver    = @"MSG";
+NSString * const kSmartInvoiceTag_VariableSymbol        = @"VS";
 
 
 NSArray * SmartPayment_GetRecommendedTagsOrder()
@@ -68,6 +78,18 @@ NSArray * SmartPayment_GetRecommendedTagsOrder()
 			kSmartPaymentTag_Frequency,
 			kSmartPaymentTag_DeathHandling,
 			nil];
+}
+
+NSDictionary * SmartInvoice_GetPaymentMapping()
+{
+    return @{
+        kSmartInvoiceTag_Account: kSmartPaymentTag_Account,
+        kSmartInvoiceTag_Amount: kSmartPaymentTag_Amount,
+        kSmartInvoiceTag_CurrencyCode: kSmartPaymentTag_CurrencyCode,
+        kSmartInvoiceTag_DueDate: kSmartPaymentTag_DueDate,
+        kSmartInvoiceTag_MessageForReceiver: kSmartPaymentTag_MessageForReceiver,
+        kSmartInvoiceTag_VariableSymbol: @"X-VS"
+    };
 }
 
 NSSet * SmartPayment_GetKnownTags()
