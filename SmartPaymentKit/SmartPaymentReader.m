@@ -153,7 +153,7 @@
 		}
 		// Quick validate value
 		value = [value stringByReplacingOccurrencesOfString:@"+" withString:@" "];
-		value = [value stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        value = [value stringByRemovingPercentEncoding];
 		if (value.length == 0) {
 			continue;
 		}
