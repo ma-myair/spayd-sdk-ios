@@ -126,7 +126,7 @@
 			IBAN_DEF(@"BH", 22),	// Bahrain
 			IBAN_DEF(@"BA", 20),	// Bosnia and Herzegovina
 			IBAN_DEF(@"BG", 22),	// Bulgaria
-			IBAN_DEF(@"CR", 21),	// Costa Rica
+			IBAN_DEF(@"CR", 22),	// Costa Rica
 			
 			IBAN_DEF(@"HR", 21),	// Croatia
 			IBAN_DEF(@"CY", 28),	// Cyprus
