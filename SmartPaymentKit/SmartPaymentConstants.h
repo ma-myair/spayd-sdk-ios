@@ -51,8 +51,8 @@ extern NSString * const kSmartPaymentTag_LastDate;				// DL
 extern NSString * const kSmartPaymentTag_Frequency;				// FRQ
 extern NSString * const kSmartPaymentTag_DeathHandling;			// DH
 
-extern NSSet *   SmartPayment_GetKnownTags();
-extern NSArray * SmartPayment_GetRecommendedTagsOrder();
+extern NSSet *   SmartPayment_GetKnownTags(void);
+extern NSArray * SmartPayment_GetRecommendedTagsOrder(void);
 
 
 // Errors

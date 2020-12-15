@@ -27,28 +27,19 @@ The SPD standard is also patent free.
 
 ### Installation
 
-The SmartPayment library is designed for ARC environment and minumum supported iOS version is iOS5. If your project is not ARC ready then you can use **-fobjc-arc** compiler flag to turn it on on per-file basis (look for [LLVM documentation](http://clang.llvm.org/docs/AutomaticReferenceCounting.html) for details). This code may also work well on iOS4.2.x  *(due to partial ARC support in that systems)*, but we're not supporting this operating system in MASTER branch.
+#### Carthage
+Preferred method of installation is Carthage. Just add to your `Cartfile`:
 
-#### Precompiled library
-
-1. Go to [downloads](https://github.com/hvge/spayd-sdk-ios/downloads) and download precompiled version of library
-2. Extract downloaded archive and drag & drop its content into your Xcode project
-3. Check VERSION.txt if archive contains up to date version of library
-
-#### Manual copy & setup
-
-1. Download or clone this library
-2. Go to **Sources** folder
-3. Copy **SmartPayment** directory into your project
-4. Add **libz** into your linker settings (libz is required for full CRC32 validation)
-
+```
+github "myair/spayd-sdk-ios"
+```
 
 ### Usage
 
 The basic usage is very simple:
 
 ```
-#import "SmartPaymentCZ.h"
+#import <SmartPaymentKit/SmartPaymentCZ.h>
 
 NSString * yourQRCode = @"SPD*1.0*ACC:CZ5855000000001265098001*AM:480.50*CC:CZK*RF:7004139146*X-VS:1234567890*DT:20120524*MSG:PLATBA ZA ZBOZI";
 
@@ -66,8 +57,8 @@ if (!payment) {
 For advanced usage you can create instance of **SmartPaymentReader** class and parse code manually:
 
 ```
-#import "SmartPaymentCZ.h"
-#import "SmartPaymentReader.h"
+#import <SmartPaymentKit/SmartPaymentCZ.h>
+#import <SmartPaymentKit/SmartPaymentReader.h>
 
 NSString * yourQRCode = @"SPD*1.0*ACC:CZ5855000000001265098001*AM:480.50*CC:CZK*RF:7004139146*X-VS:1234567890*DT:20120524*MSG:PLATBA ZA ZBOZI";
 
