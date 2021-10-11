@@ -78,7 +78,7 @@
 			SPD_TAG  ( kSmartPaymentTag_DueDate,				SmartPaymentValueType_Date)
 			SPD_TAG_P( kSmartPaymentTag_PaymentType,			SmartPaymentValueType_String,	@1, @3)
 			SPD_TAG_P( kSmartPaymentTag_MessageForReceiver,		SmartPaymentValueType_String,	@1, @60, @(TRUE))
-			SPD_TAG_P( kSmartPaymentTag_CRC32,					SmartPaymentValueType_String,	@8, @8)
+//			SPD_TAG_P( kSmartPaymentTag_CRC32,					SmartPaymentValueType_String,	@8, @8) // CRC32 is not implemented so doesnt validate the tag
 			SPD_TAG_P( kSmartPaymentTag_NotificationChannel,	SmartPaymentValueType_Enum,		@"P", @"E")
 			SPD_TAG_P( kSmartPaymentTag_NotificationAddress,	SmartPaymentValueType_String,	@1,  @320, @(TRUE))
 			SPD_TAG  ( kSmartPaymentTag_LastDate,				SmartPaymentValueType_Date)
