@@ -27,6 +27,7 @@
 @interface SmartPaymentReader ()
 {
 	NSSet * _knownTags;
+	NSDictionary * _invoiceToPaymentMapping;
 	SmartPaymentConfiguration * _configuration;
 }
 
@@ -44,6 +45,7 @@
 	self = [super init];
 	if (self) {
 		_knownTags = SmartPayment_GetKnownTags();
+		_invoiceToPaymentMapping = SmartInvoice_GetPaymentMapping();
 		_configuration = configuration;
 	}
 	return self;
@@ -117,7 +119,7 @@
 		return nil;
 	}
 	NSString *header = keyValues.firstObject;
-	if (![header isEqualToString:kSmartPayment_Header] && ![header isEqualToString:kSmartDebit_Header]) {
+	if (![header isEqualToString:kSmartPayment_Header] && ![header isEqualToString:kSmartDebit_Header] && ![header isEqualToString:kSmartInvoice_Header]) {
 		// Not a Smart Payment string
 		[self setupError:SmartPaymentError_NotAPayment str:@"String doesn't contain valid SmartPayment descriptor."];
 		return nil;
@@ -133,6 +135,8 @@
 
 	resultDictionary[kSmartPaymentKey_Header] = header;
 
+	BOOL isInvoice = [header isEqualToString:kSmartInvoice_Header];
+
 	while (index < count)
 	{
 		NSString * kv = [keyValues objectAtIndex:index++];
@@ -145,12 +149,24 @@
 		}
 		NSString * key = [[kv substringToIndex:colonRange.location] stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceCharacterSet];
 		NSString * value = [[kv substringFromIndex:colonRange.location + 1] stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceCharacterSet];
-		
-		// Validate key
-		if (![key hasPrefix:@"X-"] && ![_knownTags containsObject:key]) {
-			[self setupError:SmartPaymentError_NotAPayment str:[NSString stringWithFormat:@"Unknown key '%@'", key]];
-			return nil;
+
+		if (![key hasPrefix:@"X-"]) {
+			if (isInvoice) {
+				NSString *newKey = _invoiceToPaymentMapping[key];
+				if (newKey == nil) {
+					continue;
+				}
+
+				key = newKey;
+			} else {
+				// Validate key
+				if (![_knownTags containsObject:key]) {
+					[self setupError:SmartPaymentError_NotAPayment str:[NSString stringWithFormat:@"Unknown key '%@'", key]];
+					return nil;
+				}
+			}
 		}
+
 		// Quick validate value
 		value = [value stringByReplacingOccurrencesOfString:@"+" withString:@" "];
         	value = [value stringByRemovingPercentEncoding];

@@ -27,6 +27,7 @@
 
 extern NSString * const kSmartPayment_Header;
 extern NSString * const kSmartDebit_Header;
+extern NSString * const kSmartInvoice_Header;
 extern NSString * const kSmartPayment_Version;
 
 // Keys
@@ -51,9 +52,9 @@ extern NSString * const kSmartPaymentTag_LastDate;				// DL
 extern NSString * const kSmartPaymentTag_Frequency;				// FRQ
 extern NSString * const kSmartPaymentTag_DeathHandling;			// DH
 
-extern NSSet *   SmartPayment_GetKnownTags(void);
-extern NSArray * SmartPayment_GetRecommendedTagsOrder(void);
-
+extern NSSet *			SmartPayment_GetKnownTags(void);
+extern NSArray *		SmartPayment_GetRecommendedTagsOrder(void);
+extern NSDictionary *	SmartInvoice_GetPaymentMapping(void);
 
 // Errors
 
@@ -98,6 +99,7 @@ typedef enum {
 	SmartPaymentTypeSinglePayment,
 	SmartPaymentTypeStandingOrder,
 	SmartPaymentTypeDirectDebit,
+	SmartPaymentTypeInvoice,
 } SmartPaymentType;
 
 #define SPD_TAG(tagName, valueType)										\

@@ -29,6 +29,8 @@
 	NSString * _validCode2;
 	NSString * _validCode3;
 	NSString * _validCode4;
+	NSString * _validCode5;
+	NSString * _validCode6;
 }
 
 @end
@@ -51,6 +53,12 @@
 
 	// Direct debit
 	_validCode4 = @"SCD*1.0*ACC:CZ5855000000001265098001*AM:480.50*CC:CZK*FRQ:1M*DT:20120524*DL:20130524* DH:0";
+
+	// QR Faktura - Invoice
+	_validCode5 = @"SID*1.0*ID:012150672*DD:20151201*TP:0*AM:495.00*VS:012150672*VII:CZ60194383*INI:60194383*VIR:CZ12345678*DUZP:20151201*DT:20151217*TB0:409.09*T0:85.91*CC:CZK*ACC:CZ3103000000270016060243*";
+
+	// QR Faktura+F - QR payment with invoice data
+	_validCode6 = @"SPD*1.0*CC:CZK*ACC:CZ3103000000270016060243*AM:495.00*DT:20151217*X-VS:012150672*X-INV: SID%2A1.0%2AID:012150672%2ADD:20151201%2ATP:0%2AVII:CZ60194383%2AINI:60194383%2AVIR:CZ12345678%2ADUZP:20151201%2ATB0:409.09%2AT0:85.91*";
 }
 
 - (void) testValidIBAN
@@ -126,6 +134,36 @@
 		testDate = 1369346400;    // you can use http://www.epochconverter.com/ site for validation
 		XCTAssertTrue(pay.lastDate.timeIntervalSince1970 == testDate, @"Wrong last date");
 		XCTAssertTrue(pay.deathHandling.boolValue == NO, @"Wrong death handling strategy.");
+	}
+}
+
+- (void) testValidInvoice
+{
+	SmartPayment * payment = [_reader createPaymentFromCode:_validCode5];
+	XCTAssertTrue(payment != nil, @"SmartPaymentCZ creation failed");
+	if (payment) {
+		SmartPayment * pay = payment;
+		XCTAssertTrue(pay.type == SmartPaymentTypeInvoice, @"Wrong payment type");
+		XCTAssertTrue([pay.account.iban isEqualToString:@"CZ3103000000270016060243"], @"Wrong IBAN");
+		XCTAssertTrue(pay.amount.doubleValue == 495.00, @"Wrong Amount");
+		XCTAssertTrue([pay.currencyCode isEqualToString:@"CZK"], @"Wrong Amount");
+		NSTimeInterval testDate = 1450306800;    // you can use http://www.epochconverter.com/ site for validation
+		XCTAssertTrue(pay.dueDate.timeIntervalSince1970 == testDate, @"Wrong due date");
+	}
+}
+
+- (void) testValidPaymentWithInvoice
+{
+	SmartPayment * payment = [_reader createPaymentFromCode:_validCode6];
+	XCTAssertTrue(payment != nil, @"SmartPaymentCZ creation failed");
+	if (payment) {
+		SmartPayment * pay = payment;
+		XCTAssertTrue(pay.type == SmartPaymentTypeSinglePayment, @"Wrong payment type");
+		XCTAssertTrue([pay.account.iban isEqualToString:@"CZ3103000000270016060243"], @"Wrong IBAN");
+		XCTAssertTrue(pay.amount.doubleValue == 495.00, @"Wrong Amount");
+		XCTAssertTrue([pay.currencyCode isEqualToString:@"CZK"], @"Wrong Amount");
+		NSTimeInterval testDate = 1450306800;    // you can use http://www.epochconverter.com/ site for validation
+		XCTAssertTrue(pay.dueDate.timeIntervalSince1970 == testDate, @"Wrong due date");
 	}
 }
 
