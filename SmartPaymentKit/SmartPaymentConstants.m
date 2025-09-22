@@ -24,7 +24,6 @@
 
 NSString * const kSmartPayment_Header	= @"SPD";
 NSString * const kSmartDebit_Header		= @"SCD";
-NSString * const kSmartPayment_Version	= @"1.0";
 
 // Keys
 

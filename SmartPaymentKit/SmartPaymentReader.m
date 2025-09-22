@@ -122,9 +122,17 @@
 		[self setupError:SmartPaymentError_NotAPayment str:@"String doesn't contain valid SmartPayment descriptor."];
 		return nil;
 	}
-	if (![[keyValues objectAtIndex:1] isEqualToString:kSmartPayment_Version]) {
-		// Unknown version
-		[self setupError:SmartPaymentError_UnsupportedVersion str:[NSString stringWithFormat:@"Unknown SmartPayment version %@", [keyValues objectAtIndex:1]]];
+
+    // Validate that version is a numeric string
+	NSString *versionString = [keyValues objectAtIndex:1];
+	NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+    formatter.numberStyle = NSNumberFormatterDecimalStyle;
+    formatter.decimalSeparator = @".";
+	NSNumber *versionNumber = [formatter numberFromString:versionString];
+	
+	if (!versionNumber) {
+		// Invalid version format - not a number
+		[self setupError:SmartPaymentError_UnsupportedVersion str:[NSString stringWithFormat:@"Invalid SmartPayment version format '%@' - expected numeric value", versionString]];
 		return nil;
 	}
 	
