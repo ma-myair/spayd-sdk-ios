@@ -26,7 +26,8 @@
 {
 	SmartPaymentReader * _reader;
 	NSString * _validCode1;
-	NSString * _validCode2;
+    NSString * _validCode2;
+	NSString * _validCode3;
 }
 
 @end
@@ -35,10 +36,12 @@
 
 - (void) setUp
 {
-	_reader = [[SmartPaymentReader alloc] initWithConfiguration:[SmartPaymentCZ czechConfiguration]];
-	_validCode1 = @"SPD*1.0*ACC:CZ5855000000001265098001*AM:480.50*CC:CZK*RF:7004139146*X-VS:1234567890*X-SS:00123*X-KS:0200*DT:20120524*MSG:PLATBA ZA ZBOZI*X-PER:7*X-ID:0x336699*X-URL:HTTP://GOOGLE.COM";
-	
-	_validCode2 = @"SPD*1.0*ACC:CZ5855000000001265098001*ALT-ACC:CZ3208000000000000007894,CZ0908000000000353497163,AT736000000002386492";
+    _reader = [[SmartPaymentReader alloc] initWithConfiguration:[SmartPaymentCZ czechConfiguration]];
+    _validCode1 = @"SPD*1.0*ACC:CZ5855000000001265098001*AM:480.50*CC:CZK*RF:7004139146*X-VS:1234567890*X-SS:00123*X-KS:0200*DT:20120524*MSG:PLATBA ZA ZBOZI*X-PER:7*X-ID:0x336699*X-URL:HTTP://GOOGLE.COM";
+
+    _validCode2 = @"SPD*1.0*ACC:CZ5855000000001265098001*ALT-ACC:CZ3208000000000000007894,CZ0908000000000353497163,AT736000000002386492";
+
+    _validCode3 = @"SPD*1.2*ACC:CZ5855000000001265098001*ALT-ACC:CZ3208000000000000007894,CZ0908000000000353497163,AT736000000002386492";
 }
 
 - (void) testCZCodes
@@ -58,18 +61,29 @@
 		XCTAssertTrue([pay.customIdentifier isEqualToString:@"0x336699"],	@"CZ: Wrong custom identifier");
 		XCTAssertTrue([pay.customURL isEqualToString:@"HTTP://GOOGLE.COM"],	@"CZ: Wrong custom URL");
 	}
-	
-	payment = [_reader createPaymentFromCode:_validCode2];
+    
+    payment = [_reader createPaymentFromCode:_validCode2];
+    XCTAssertTrue(payment != nil, @"CZ: SmartPaymentCZ creation failed");
+    if (payment) {
+        SmartPaymentCZ * pay = [payment isKindOfClass:[SmartPaymentCZ class]] ? (SmartPaymentCZ*)payment : nil;
+        NSArray * accounts = [payment allAccountsForCountry:@"CZ"];
+        XCTAssertTrue(accounts.count == 3, @"CZ: wrong country filter");
+        accounts = [pay czAllAccountsWithBankCode:@"5500"];
+        XCTAssertTrue(accounts.count == 1, @"CZ: wrong bank filter");
+        accounts = [pay czAllAccountsWithBankCode:@"0800"];
+        XCTAssertTrue(accounts.count == 2, @"CZ: wrong bank filter");
+    }
+
+    payment = [_reader createPaymentFromCode:_validCode3];
 	XCTAssertTrue(payment != nil, @"CZ: SmartPaymentCZ creation failed");
 	if (payment) {
 		SmartPaymentCZ * pay = [payment isKindOfClass:[SmartPaymentCZ class]] ? (SmartPaymentCZ*)payment : nil;
 		NSArray * accounts = [payment allAccountsForCountry:@"CZ"];
-		XCTAssertTrue(accounts.count == 3, @"CZ: wrong country filter");
-		accounts = [pay czAllAccountsWithBankCode:@"5500"];
-		XCTAssertTrue(accounts.count == 1, @"CZ: wrong bank filter");
-		accounts = [pay czAllAccountsWithBankCode:@"0800"];
-		XCTAssertTrue(accounts.count == 2, @"CZ: wrong bank filter");
-
+        XCTAssertTrue(accounts.count == 3, @"CZ: wrong country filter");
+        accounts = [pay czAllAccountsWithBankCode:@"5500"];
+        XCTAssertTrue(accounts.count == 1, @"CZ: wrong bank filter");
+        accounts = [pay czAllAccountsWithBankCode:@"0800"];
+        XCTAssertTrue(accounts.count == 2, @"CZ: wrong bank filter");
 	}
 }
 

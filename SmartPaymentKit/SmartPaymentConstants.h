@@ -27,7 +27,6 @@
 
 extern NSString * const kSmartPayment_Header;
 extern NSString * const kSmartDebit_Header;
-extern NSString * const kSmartPayment_Version;
 
 // Keys
 

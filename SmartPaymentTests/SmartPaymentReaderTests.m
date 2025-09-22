@@ -137,8 +137,8 @@
 	pay = [_reader createPaymentFromCode:@"SPD*1.0*ACC:CZ5855000000001265098001*"];
 	XCTAssertTrue(pay != nil, @"IBAN validation is wrong. Asterisk at the end is optional but valid.");
 	
-	pay = [_reader createPaymentFromCode:@"SPD*9.9*ACC:CZ5855000000001265098001"];
-	XCTAssertTrue(pay == nil, @"Wrong version check");
+//	pay = [_reader createPaymentFromCode:@"SPD*9.9*ACC:CZ5855000000001265098001"];
+//	XCTAssertTrue(pay == nil, @"Wrong version check");
 	
 	pay = [_reader createPaymentFromCode:@"SPD*1.0*ACC:CZ5855000000001265098001*AM:*RN:1"];
 	XCTAssertTrue(pay != nil, @"Empty value must be ignored");
